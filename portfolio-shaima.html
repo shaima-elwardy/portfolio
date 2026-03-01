@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shaimaa Elwardy — Wordpress Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Manrope:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0a0a0f;
+  --bg2:      #0f0f18;
+  --bg3:      #13131e;
+  --card:     #111119;
+  --border:   rgba(255,255,255,0.07);
+  --cyan:     #00e5ff;
+  --purple:   #a855f7;
+  --pink:     #ec4899;
+  --green:    #22d3ee;
+  --white:    #f0f0f8;
+  --muted:    #7070a0;
+  --muted2:   #404060;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Manrope',sans-serif;
+  background:var(--bg);
+  color:var(--white);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ─── CURSOR ─── */
+#cur{
+  position:fixed;width:8px;height:8px;
+  background:var(--cyan);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:width .3s,height .3s,background .3s;
+  mix-blend-mode:screen;
+}
+#cur-ring{
+  position:fixed;width:32px;height:32px;
+  border:1px solid rgba(0,229,255,.4);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+}
+
+/* ─── GRID BACKGROUND ─── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;z-index:0;
+}
+
+/* ─── GLOW ORBS ─── */
+.glow{
+  position:fixed;border-radius:50%;
+  pointer-events:none;filter:blur(120px);z-index:0;
+}
+.glow1{width:500px;height:500px;background:rgba(168,85,247,.08);top:-100px;right:-150px;animation:gf 12s ease-in-out infinite;}
+.glow2{width:400px;height:400px;background:rgba(0,229,255,.06);bottom:0;left:-100px;animation:gf 15s ease-in-out infinite reverse;}
+.glow3{width:300px;height:300px;background:rgba(236,72,153,.05);top:40%;left:50%;animation:gf 10s ease-in-out infinite 3s;}
+@keyframes gf{
+  0%,100%{transform:translate(0,0) scale(1);}
+  50%{transform:translate(40px,-30px) scale(1.1);}
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 6%;
+  transition:background .4s,backdrop-filter .4s;
+}
+nav.solid{
+  background:rgba(10,10,15,.9);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-family:'Syne',sans-serif;
+  font-size:1.4rem;font-weight:800;
+  text-decoration:none;color:var(--white);
+  letter-spacing:.02em;
+}
+.logo span{color:var(--cyan);}
+
+.nav-menu{display:flex;gap:2rem;list-style:none;}
+.nav-menu a{
+  font-size:.78rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  transition:color .3s;position:relative;
+}
+.nav-menu a::after{
+  content:'';position:absolute;left:0;bottom:-4px;
+  width:0;height:1px;background:var(--cyan);
+  transition:width .3s;
+}
+.nav-menu a:hover{color:var(--white);}
+.nav-menu a:hover::after{width:100%;}
+
+.nav-btn{
+  padding:.55rem 1.3rem;
+  border:1px solid rgba(0,229,255,.3);
+  color:var(--cyan);font-size:.75rem;
+  font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;border-radius:3px;
+  transition:all .3s;background:rgba(0,229,255,.05);
+}
+.nav-btn:hover{background:var(--cyan);color:var(--bg);border-color:var(--cyan);}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  padding:0 6%;
+  position:relative;z-index:1;
+  overflow:hidden;
+}
+
+.hero-content{max-width:750px;}
+
+.hero-available{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.4rem 1rem;
+  border:1px solid rgba(34,211,238,.2);
+  border-radius:100px;
+  background:rgba(34,211,238,.05);
+  margin-bottom:2rem;
+  opacity:0;animation:slideUp .8s ease forwards .3s;
+}
+.avail-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 8px var(--green);
+  animation:blink 2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+.hero-available span{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);}
+
+.hero-greeting{
+  font-size:1rem;font-weight:300;color:var(--muted);
+  margin-bottom:.5rem;
+  opacity:0;animation:slideUp .8s ease forwards .5s;
+}
+.hero-greeting em{color:var(--cyan);font-style:normal;font-weight:500;}
+
+.hero-name{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.6rem,6vw,6.5rem);
+  font-weight:800;line-height:.95;
+  letter-spacing:-.03em;
+  margin-bottom:.4rem;
+  opacity:0;animation:slideUp .9s cubic-bezier(.16,1,.3,1) forwards .65s;
+}
+.hero-name .grad{
+  background:linear-gradient(135deg, var(--cyan) 0%, var(--purple) 60%, var(--pink) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.hero-role{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.1rem,2.5vw,1.8rem);
+  font-weight:600;color:var(--muted);
+  margin-bottom:1.8rem;
+  opacity:0;animation:slideUp .8s ease forwards .85s;
+  min-height:2.2rem;
+}
+.typed-text{color:var(--white);}
+.typed-cursor{color:var(--cyan);animation:curBlink .8s step-end infinite;}
+@keyframes curBlink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.hero-desc{
+  font-size:1rem;line-height:1.85;color:var(--muted);
+  font-weight:300;max-width:540px;margin-bottom:2.5rem;
+  opacity:0;animation:slideUp .8s ease forwards 1.05s;
+}
+
+.hero-actions{
+  display:flex;gap:1rem;flex-wrap:wrap;
+  opacity:0;animation:slideUp .8s ease forwards 1.2s;
+}
+.btn-glow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.9rem 2rem;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  color:var(--bg);font-size:.8rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;border-radius:3px;
+  position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s;
+  box-shadow:0 0 30px rgba(0,229,255,.2);
+}
+.btn-glow::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--purple),var(--pink));
+  opacity:0;transition:opacity .4s;
+}
+.btn-glow:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(0,229,255,.35);}
+.btn-glow:hover::before{opacity:1;}
+.btn-glow span,.btn-glow svg{position:relative;z-index:1;}
+
+.btn-outline-glow{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:.9rem 2rem;
+  background:transparent;
+  color:var(--white);font-size:.8rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  text-decoration:none;border-radius:3px;
+  border:1px solid var(--border);
+  transition:all .3s;
+}
+.btn-outline-glow:hover{border-color:rgba(0,229,255,.4);color:var(--cyan);background:rgba(0,229,255,.05);transform:translateY(-3px);}
+
+/* Hero stats */
+.hero-stats{
+  display:flex;gap:3rem;margin-top:3.5rem;
+  padding-top:2rem;
+  border-top:1px solid var(--border);
+  opacity:0;animation:slideUp .8s ease forwards 1.4s;
+}
+.hstat-n{
+  font-family:'Syne',sans-serif;
+  font-size:2.2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;display:block;
+}
+.hstat-l{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.3rem;display:block;}
+
+/* Hero visual side */
+.hero-visual{
+  position:absolute;right:6%;top:50%;transform:translateY(-50%);
+  width:clamp(300px,38vw,550px);
+  pointer-events:none;
+  opacity:0;animation:fadeIn 1.2s ease forwards 1s;
+}
+.hero-card-3d{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:2rem;
+  transform:perspective(1000px) rotateY(-8deg) rotateX(4deg);
+  transition:transform .6s ease;
+  box-shadow:
+    0 0 0 1px rgba(0,229,255,.08),
+    0 40px 80px rgba(0,0,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.05);
+}
+.hero-card-3d:hover{transform:perspective(1000px) rotateY(0deg) rotateX(0deg);}
+
+.card-top{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem;}
+.card-dots span{
+  display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:.35rem;
+}
+.cd1{background:#ff5f57;}.cd2{background:#ffbd2e;}.cd3{background:#28c840;}
+.card-title-bar{
+  font-size:.7rem;letter-spacing:.08em;color:var(--muted);
+  background:rgba(255,255,255,.04);padding:.25rem .8rem;border-radius:4px;
+}
+
+.code-lines{display:flex;flex-direction:column;gap:.55rem;}
+.cl{display:flex;align-items:center;gap:.6rem;font-size:.8rem;font-family:monospace;line-height:1.4;}
+.ln{color:var(--muted2);font-size:.65rem;min-width:20px;text-align:right;}
+.kw{color:var(--purple);}
+.fn{color:var(--cyan);}
+.st{color:#f59e0b;}
+.cm{color:var(--muted2);font-style:italic;}
+.pu{color:var(--muted);}
+.vl{color:#86efac;}
+
+.card-glow{
+  position:absolute;inset:-1px;border-radius:13px;
+  background:linear-gradient(135deg,rgba(0,229,255,.15),transparent 50%,rgba(168,85,247,.1));
+  pointer-events:none;
+}
+
+/* floating badges */
+.fbadge{
+  position:absolute;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:.5rem .9rem;
+  font-size:.72rem;font-weight:600;letter-spacing:.05em;
+  display:flex;align-items:center;gap:.5rem;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  animation:fbFloat 4s ease-in-out infinite;
+  white-space:nowrap;
+}
+.fbadge.b1{top:-20px;right:-10px;border-color:rgba(0,229,255,.2);color:var(--cyan);animation-delay:0s;}
+.fbadge.b2{bottom:30px;left:-30px;border-color:rgba(168,85,247,.2);color:var(--purple);animation-delay:1.5s;}
+.fbadge.b3{bottom:-18px;right:40px;border-color:rgba(34,211,238,.2);color:var(--green);animation-delay:0.8s;}
+@keyframes fbFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ─── MARQUEE ─── */
+.marquee{
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:.85rem 0;
+  background:var(--bg2);
+  overflow:hidden;position:relative;z-index:1;
+}
+.marquee-track{
+  display:flex;
+  animation:mq 22s linear infinite;
+  white-space:nowrap;
+}
+.mq-item{
+  display:inline-flex;align-items:center;gap:1.2rem;
+  padding:0 1.5rem;
+  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+}
+.mq-sep{color:var(--cyan);font-size:.9rem;}
+@keyframes mq{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ─── SECTION BASE ─── */
+.sec{padding:7rem 6%;position:relative;z-index:1;}
+.sec.alt{background:var(--bg2);}
+
+.s-label{
+  display:inline-flex;align-items:center;gap:.6rem;
+  font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cyan);font-weight:600;margin-bottom:.8rem;
+}
+.s-label::before{content:'//';color:var(--purple);}
+
+h2.s-title{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2rem,4vw,3.5rem);
+  font-weight:800;line-height:1.1;
+  letter-spacing:-.02em;margin-bottom:1rem;
+}
+h2.s-title span{
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.s-sub{font-size:.95rem;color:var(--muted);font-weight:300;line-height:1.75;max-width:500px;}
+
+/* ─── ABOUT ─── */
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:5rem;align-items:center;margin-top:4rem;
+}
+.about-img-wrap{position:relative;}
+.about-img-box{
+  aspect-ratio:1;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;
+}
+.about-img-box::before{
+  content:'SE';
+  font-family:'Syne',sans-serif;
+  font-size:9rem;font-weight:800;
+  background:linear-gradient(135deg,rgba(0,229,255,.1),rgba(168,85,247,.1));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.about-img-box::after{
+  content:'';position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 30% 70%,rgba(0,229,255,.06),transparent 60%),
+             radial-gradient(circle at 70% 30%,rgba(168,85,247,.06),transparent 60%);
+}
+.about-corner{
+  position:absolute;
+  width:30px;height:30px;
+  border-color:var(--cyan);border-style:solid;border-width:0;
+}
+.ac-tl{top:-6px;left:-6px;border-top-width:2px;border-left-width:2px;}
+.ac-tr{top:-6px;right:-6px;border-top-width:2px;border-right-width:2px;}
+.ac-bl{bottom:-6px;left:-6px;border-bottom-width:2px;border-left-width:2px;}
+.ac-br{bottom:-6px;right:-6px;border-bottom-width:2px;border-right-width:2px;}
+
+.exp-badge{
+  position:absolute;bottom:-20px;right:-20px;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  border-radius:10px;padding:1.2rem 1.5rem;
+  text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.4);
+}
+.exp-badge .n{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--bg);line-height:1;display:block;}
+.exp-badge .l{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(10,10,15,.7);display:block;margin-top:.2rem;}
+
+.about-text p{font-size:.95rem;line-height:1.9;color:var(--muted);font-weight:300;margin-bottom:1.2rem;}
+
+.about-highlights{
+  display:flex;flex-direction:column;gap:.7rem;margin-top:1.8rem;
+}
+.hl-item{
+  display:flex;align-items:center;gap:.8rem;
+  font-size:.85rem;color:var(--muted);font-weight:300;
+}
+.hl-item::before{
+  content:'▸';color:var(--cyan);font-size:.8rem;flex-shrink:0;
+}
+
+/* ─── SKILLS ─── */
+.skills-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:4rem;}
+
+.sk-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:2rem;
+  transition:transform .35s,border-color .35s,box-shadow .35s;
+  position:relative;overflow:hidden;
+}
+.sk-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .4s cubic-bezier(.16,1,.3,1);
+}
+.sk-card:hover{transform:translateY(-5px);border-color:rgba(0,229,255,.15);box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.sk-card:hover::before{transform:scaleX(1);}
+
+.sk-head{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.sk-icon-wrap{
+  width:44px;height:44px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+  flex-shrink:0;
+}
+.i-wp{background:rgba(0,229,255,.1);}
+.i-sh{background:rgba(34,197,94,.1);}
+.i-sa{background:rgba(251,146,60,.1);}
+.i-fe{background:rgba(168,85,247,.1);}
+.i-ui{background:rgba(236,72,153,.1);}
+.i-se{background:rgba(234,179,8,.1);}
+
+.sk-card h3{
+  font-family:'Syne',sans-serif;
+  font-size:1.05rem;font-weight:700;
+}
+.sk-card p{font-size:.82rem;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:1.2rem;}
+
+/* Skill bar */
+.skill-bar-wrap{margin-bottom:.9rem;}
+.skill-bar-head{display:flex;justify-content:space-between;margin-bottom:.4rem;}
+.skill-bar-name{font-size:.75rem;letter-spacing:.05em;color:var(--muted);}
+.skill-bar-pct{font-size:.7rem;font-weight:600;color:var(--cyan);}
+.skill-bar-track{
+  height:3px;background:var(--border);border-radius:100px;overflow:hidden;
+}
+.skill-bar-fill{
+  height:100%;border-radius:100px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  width:0;transition:width 1.2s cubic-bezier(.16,1,.3,1);
+}
+
+/* ─── PROJECTS ─── */
+.proj-filters{
+  display:flex;gap:.6rem;flex-wrap:wrap;margin-top:2rem;margin-bottom:2.5rem;
+}
+.pf-btn{
+  padding:.45rem 1.1rem;
+  font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid var(--border);border-radius:100px;
+  background:transparent;color:var(--muted);
+  cursor:none;transition:all .3s;
+}
+.pf-btn:hover,.pf-btn.active{
+  border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.07);
+}
+.proj-count{
+  font-size:.75rem;color:var(--muted);margin-bottom:1.5rem;
+}
+.proj-count span{color:var(--cyan);font-weight:600;}
+
+.proj-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.2rem;
+}
+.proj-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;
+  transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .35s,box-shadow .35s,opacity .3s;
+  cursor:none;
+}
+.proj-card.hidden{display:none;}
+.proj-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(0,229,255,.25);
+  box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 0 1px rgba(0,229,255,.06);
+}
+.proj-thumb{
+  height:170px;
+  position:relative;overflow:hidden;background:var(--bg3);
+}
+.proj-thumb img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .5s ease,filter .4s;
+  filter:brightness(.85);
+}
+.proj-card:hover .proj-thumb img{transform:scale(1.05);filter:brightness(1);}
+.proj-thumb-placeholder{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;
+  background:linear-gradient(135deg,var(--bg3),var(--bg2));
+  position:relative;
+}
+.proj-thumb-placeholder::after{
+  content:attr(data-letter);
+  position:absolute;
+  font-family:'Syne',sans-serif;font-size:4rem;font-weight:800;
+  opacity:.06;color:var(--cyan);
+  right:.5rem;bottom:-.5rem;line-height:1;
+}
+
+.proj-overlay{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.82);backdrop-filter:blur(6px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem;
+  opacity:0;transition:opacity .35s;
+}
+.proj-card:hover .proj-overlay{opacity:1;}
+.proj-link-btn{
+  padding:.5rem 1.2rem;
+  border:1px solid rgba(0,229,255,.5);
+  color:var(--cyan);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;border-radius:3px;font-weight:600;
+  transition:all .25s;
+}
+.proj-link-btn:hover{background:var(--cyan);color:var(--bg);}
+.proj-domain-tag{
+  font-size:.65rem;color:rgba(255,255,255,.4);letter-spacing:.05em;
+}
+
+.proj-body{padding:1rem 1.1rem 1.2rem;}
+.proj-cat{
+  font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cyan);font-weight:600;margin-bottom:.3rem;
+}
+.proj-card h3{
+  font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;
+  color:var(--white);line-height:1.3;
+}
+.proj-card h3 a{color:inherit;text-decoration:none;transition:color .2s;}
+.proj-card h3 a:hover{color:var(--cyan);}
+
+.proj-pagination{
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  margin-top:3rem;flex-wrap:wrap;
+}
+.pg-btn{
+  width:36px;height:36px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:6px;
+  background:transparent;color:var(--muted);
+  font-size:.8rem;font-weight:600;
+  cursor:none;transition:all .25s;
+}
+.pg-btn:hover,.pg-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,229,255,.07);}
+.pg-btn:disabled{opacity:.3;pointer-events:none;}
+.pg-prev,.pg-next{width:auto;padding:0 .9rem;font-size:.72rem;letter-spacing:.05em;}
+
+/* ─── EXPERIENCE ─── */
+.exp-wrap{
+  display:grid;grid-template-columns:1fr 1.6fr;
+  gap:6rem;margin-top:4rem;
+}
+.exp-sticky{position:sticky;top:6rem;align-self:flex-start;}
+.exp-sticky .s-sub{margin-top:1rem;}
+
+.tl{display:flex;flex-direction:column;}
+.tl-item{
+  padding:0 0 2.5rem 2.5rem;
+  border-left:1px solid var(--border);
+  position:relative;
+  transition:border-color .3s;
+}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item:hover{border-left-color:var(--cyan);}
+.tl-dot{
+  position:absolute;left:-5px;top:0;
+  width:9px;height:9px;
+  border-radius:50%;
+  border:1.5px solid var(--cyan);
+  background:var(--bg);
+  transition:background .3s,box-shadow .3s;
+}
+.tl-item:hover .tl-dot{background:var(--cyan);box-shadow:0 0 10px var(--cyan);}
+.tl-yr{
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cyan);font-weight:600;margin-bottom:.4rem;
+}
+.tl-item h3{
+  font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.15rem;
+}
+.tl-co{font-size:.82rem;color:var(--muted);margin-bottom:.7rem;}
+.tl-item p{font-size:.85rem;color:var(--muted);line-height:1.75;font-weight:300;}
+
+/* ─── TESTIMONIALS ─── */
+.test-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;margin-top:4rem;
+}
+.test-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;padding:2rem;
+  transition:transform .35s,border-color .35s;
+}
+.test-card:hover{transform:translateY(-4px);border-color:rgba(168,85,247,.2);}
+.test-quote{
+  font-size:2.5rem;color:var(--purple);line-height:1;margin-bottom:1rem;
+  font-family:serif;
+}
+.test-text{font-size:.88rem;color:var(--muted);line-height:1.75;font-weight:300;margin-bottom:1.5rem;}
+.test-author{display:flex;align-items:center;gap:.8rem;}
+.test-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:700;color:var(--bg);
+  font-family:'Syne',sans-serif;flex-shrink:0;
+}
+.test-name{font-size:.85rem;font-weight:600;font-family:'Syne',sans-serif;}
+.test-role{font-size:.72rem;color:var(--muted);}
+
+/* ─── CONTACT ─── */
+.contact-wrap{
+  display:grid;grid-template-columns:1fr 1.2fr;
+  gap:5rem;align-items:start;margin-top:4rem;
+}
+.contact-left .s-sub{margin:1rem 0 2.5rem;}
+.c-info-items{display:flex;flex-direction:column;gap:1rem;}
+.c-info{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.2rem;
+  background:var(--card);
+  border:1px solid var(--border);border-radius:8px;
+  text-decoration:none;color:var(--muted);
+  font-size:.88rem;
+  transition:all .3s;
+}
+.c-info:hover{border-color:rgba(0,229,255,.2);color:var(--cyan);background:rgba(0,229,255,.04);transform:translateX(6px);}
+.c-info-icon{
+  width:36px;height:36px;
+  border:1px solid var(--border);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;flex-shrink:0;
+}
+
+.contact-form-wrap{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;padding:2.5rem;
+}
+.form-title{
+  font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;
+  margin-bottom:1.8rem;
+}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.fg{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.1rem;}
+.fg label{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.fg input,.fg textarea,.fg select{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:.8rem 1rem;
+  color:var(--white);
+  font-family:'Manrope',sans-serif;font-size:.88rem;font-weight:300;
+  outline:none;transition:border-color .3s,background .3s;
+}
+.fg input:focus,.fg textarea:focus{
+  border-color:rgba(0,229,255,.35);background:rgba(0,229,255,.03);
+}
+.fg textarea{min-height:110px;resize:vertical;}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--muted2);}
+
+.submit-btn{
+  width:100%;margin-top:1.2rem;
+  padding:1rem;
+  background:linear-gradient(135deg,var(--cyan),var(--purple));
+  color:var(--bg);font-family:'Syne',sans-serif;
+  font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  border:none;border-radius:6px;cursor:none;
+  transition:opacity .3s,transform .3s,box-shadow .3s;
+  box-shadow:0 0 30px rgba(0,229,255,.15);
+}
+.submit-btn:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 0 50px rgba(0,229,255,.3);}
+
+/* ─── FOOTER ─── */
+footer{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:2rem 6%;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+  position:relative;z-index:1;
+}
+.footer-logo{
+  font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;
+  color:var(--white);text-decoration:none;
+}
+.footer-logo span{color:var(--cyan);}
+footer p{font-size:.75rem;color:var(--muted);}
+.back-top{
+  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  transition:color .3s;
+}
+.back-top:hover{color:var(--cyan);}
+
+/* ─── REVEAL ─── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);}
+.reveal.d1{transition-delay:.1s;}.reveal.d2{transition-delay:.2s;}.reveal.d3{transition-delay:.3s;}.reveal.d4{transition-delay:.4s;}
+.reveal.vis{opacity:1;transform:none;}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .hero-visual{display:none;}
+  .about-grid,.skills-wrap,.exp-wrap,.contact-wrap{grid-template-columns:1fr;}
+  .test-grid{grid-template-columns:1fr 1fr;}
+  .proj-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:700px){
+  .test-grid{grid-template-columns:1fr;}
+  .proj-grid{grid-template-columns:1fr;}
+  .nav-menu,.nav-btn{display:none;}
+  .hero-stats{gap:1.5rem;flex-wrap:wrap;}
+  .hero-stats > div{flex:1;min-width:100px;}
+  .f-row{grid-template-columns:1fr;}
+  .proj-filters{gap:.4rem;}
+  .pf-btn{font-size:.65rem;padding:.38rem .85rem;}
+  .sec{padding:4.5rem 5%;}
+}
+@media(max-width:480px){
+  .proj-grid{grid-template-columns:1fr;}
+  .hero-stats{gap:1rem;}
+}
+html{
+  overflow-x: hidden !important;
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+<div class="glow glow3"></div>
+
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">Shaimaa<span>.</span>Elwardy</a>
+  <ul class="nav-menu">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.link/n4f84t" class="nav-btn" target="_blank">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-available">
+      <div class="avail-dot"></div>
+      <span>Available for projects</span>
+    </div>
+    <p class="hero-greeting">Hello, I'm <em>Shaimaa Elwardy</em></p>
+    <h3 class="hero-name">
+      Wordpress<br><span class="grad">Developer</span>
+    </h3>
+    <p class="hero-role">
+      <span class="typed-text" id="typed"></span><span class="typed-cursor">|</span>
+    </p>
+    <p class="hero-desc">
+      Specialized in WordPress, Shopify, Salla, Zid , Wix & Frontend development. I build fast, beautiful, and functional online experiences that help businesses grow.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-glow"><span>View My Work</span><span>→</span></a>
+      <a href="../Downloads/portfolio/ShaimaaElwardy Cv.pdf" class="btn-outline-glow" target="_blank">Download CV</a>
+    </div>
+    <div class="hero-stats">
+      <div><span class="hstat-n" data-count="80">0</span><span class="hstat-l">Projects Done</span></div>
+      <div><span class="hstat-n" data-count="5">0</span><span class="hstat-l">Years Exp.</span></div>
+      <div><span class="hstat-n" data-count="6">0</span><span class="hstat-l">Platforms</span></div>
+      <div><span class="hstat-n" data-count="100">0</span><span class="hstat-l">% Satisfied</span></div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card-3d">
+      <div class="card-glow"></div>
+      <div class="card-top">
+        <div class="card-dots">
+          <span class="cd1"></span><span class="cd2"></span><span class="cd3"></span>
+        </div>
+        <div class="card-title-bar">portfolio.js</div>
+      </div>
+      <div class="code-lines">
+        <div class="cl"><span class="ln">1</span><span class="kw">const </span><span class="fn">developer</span><span class="pu"> = {</span></div>
+        <div class="cl"><span class="ln">2</span>&nbsp;&nbsp;<span class="st">name</span><span class="pu">: </span><span class="vl">"Shaimaa Elwardy"</span><span class="pu">,</span></div>
+        <div class="cl"><span class="ln">3</span>&nbsp;&nbsp;<span class="st">role</span><span class="pu">: </span><span class="vl">"Wordpress Developer"</span><span class="pu">,</span></div>
+        <div class="cl"><span class="ln">4</span>&nbsp;&nbsp;<span class="st">skills</span><span class="pu">: [</span></div>
+        <div class="cl"><span class="ln">5</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="vl">"WordPress"</span><span class="pu">,</span><span class="vl">"Shopify"</span><span class="pu">,</span></div>
+        <div class="cl"><span class="ln">6</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="vl">"Salla"</span><span class="pu">,</span><span class="vl">"Zid"</span><span class="pu">,</span></div>
+        <div class="cl"><span class="ln">7</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="vl">"Frontend Dev"</span></div>
+        <div class="cl"><span class="ln">8</span>&nbsp;&nbsp;<span class="pu">],</span></div>
+        <div class="cl"><span class="ln">9</span>&nbsp;&nbsp;<span class="st">available</span><span class="pu">: </span><span class="kw">true</span></div>
+        <div class="cl"><span class="ln">10</span><span class="pu">}</span></div>
+        <div class="cl"><span class="ln">11</span><span class="cm">// Let's build something great 🚀</span></div>
+      </div>
+    </div>
+    <div class="fbadge b1">⚡ WordPress Expert</div>
+    <div class="fbadge b2">🛍️ Shopify Dev</div>
+    <div class="fbadge b3">✅ Available Now</div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <div class="mq-item">WordPress <span class="mq-sep">✦</span></div>
+    <div class="mq-item">Shopify <span class="mq-sep">✦</span></div>
+    <div class="mq-item">Salla Platform <span class="mq-sep">✦</span></div>
+    <div class="mq-item">Zid Store <span class="mq-sep">✦</span></div>
+    <div class="mq-item">WooCommerce <span class="mq-sep">✦</span></div>
+    <div class="mq-item">Frontend Dev <span class="mq-sep">✦</span></div>
+    <div class="mq-item">E-Commerce <span class="mq-sep">✦</span></div>
+    <div class="mq-item">RTL Support <span class="mq-sep">✦</span></div>
+    <div class="mq-item">SEO Optimization <span class="mq-sep">✦</span></div>
+    <div class="mq-item">UI/UX <span class="mq-sep">✦</span></div>
+    <div class="mq-item">WordPress <span class="mq-sep">✦</span></div>
+    <div class="mq-item">Shopify <span class="mq-sep">✦</span></div>
+    <div class="mq-item">Salla Platform <span class="mq-sep">✦</span></div>
+    <div class="mq-item">Zid Store <span class="mq-sep">✦</span></div>
+    <div class="mq-item">WooCommerce <span class="mq-sep">✦</span></div>
+    <div class="mq-item">Frontend Dev <span class="mq-sep">✦</span></div>
+    <div class="mq-item">E-Commerce <span class="mq-sep">✦</span></div>
+    <div class="mq-item">RTL Support <span class="mq-sep">✦</span></div>
+    <div class="mq-item">SEO Optimization <span class="mq-sep">✦</span></div>
+    <div class="mq-item">UI/UX <span class="mq-sep">✦</span></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="sec alt" id="about">
+  <div class="s-label reveal">About Me</div>
+  <h2 class="s-title reveal">Who I <span>Am</span></h2>
+  <div class="about-grid">
+    <div class="about-img-wrap reveal">
+      <div class="about-img-box">
+        <img src="../Downloads/portfolio/1758408944308.jpeg" style="border-radius: 20px;"/>
+        <div class="about-corner ac-tl"></div>
+        <div class="about-corner ac-tr"></div>
+        <div class="about-corner ac-bl"></div>
+        <div class="about-corner ac-br"></div>
+      </div>
+      <div class="exp-badge">
+        <span class="n">5+</span>
+        <span class="l">Years Exp.</span>
+      </div>
+    </div>
+    <div class="about-text">
+      <div class="s-label reveal">My Story</div>
+      <h2 class="s-title reveal">Building digital <span>experiences</span></h2>
+      <p class="reveal d1">I'm Shaimaa Elwardy, a passionate web developer with deep hands-on expertise across the most powerful e-commerce and website platforms. I help businesses go from zero to a fully working online presence.</p>
+      <p class="reveal d2">From WordPress to Shopify, and Arabic-market platforms like Salla and Zid — I handle every stage: design, development, SEO, and launch. I love clean code and even cleaner results.</p>
+      <div class="about-highlights reveal d3">
+        <div class="hl-item">WordPress & WooCommerce custom development</div>
+        <div class="hl-item">Shopify store setup & Liquid theme customization</div>
+        <div class="hl-item">Salla & Zid stores for Arabic / MENA market</div>
+        <div class="hl-item">Responsive frontend with HTML, CSS & JavaScript</div>
+        <div class="hl-item">SEO optimization & Core Web Vitals performance</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="sec" id="skills">
+  <div class="s-label reveal">Expertise</div>
+  <h2 class="s-title reveal">My <span>Skills</span></h2>
+  <p class="s-sub reveal">Platforms and technologies I've mastered over years of real-world projects.</p>
+  <div class="skills-wrap">
+    <div class="sk-card reveal">
+      <div class="sk-head">
+        <div class="sk-icon-wrap i-wp"><img src="../Downloads/portfolio/wordpress-logo.png" style="width: 50px;"/></div>
+        <h3>WordPress</h3>
+      </div>
+      <p>Custom themes, WooCommerce stores, plugin development, and advanced performance tuning.</p>
+      <div class="skill-bar-wrap"><div class="skill-bar-head"><span class="skill-bar-name">WordPress</span><span class="skill-bar-pct">99%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="95"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-head"><span class="skill-bar-name">WooCommerce</span><span class="skill-bar-pct">98%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div></div>
+    </div>
+    <div class="sk-card reveal d1">
+      <div class="sk-head">
+        <div class="sk-icon-wrap i-sh"><img src="../Downloads/portfolio/shopify.png" style="width: 50px;"/></div>
+        <h3>Shopify</h3>
+      </div>
+      <p>Store setup, Liquid theme dev, app integrations, and conversion optimization from day one.</p>
+      <div class="skill-bar-wrap"><div class="skill-bar-head"><span class="skill-bar-name">Shopify</span><span class="skill-bar-pct">95%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="90"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-head"><span class="skill-bar-name">Liquid</span><span class="skill-bar-pct">85%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div></div>
+    </div>
+    <div class="sk-card reveal d2">
+      <div class="sk-head">
+        <div class="sk-icon-wrap i-sa"><img src="../Downloads/portfolio/Screenshot 2026-03-01 at 4.05.35 PM.png" style="width: 50px;border-radius:5px !important;"/></div>
+        <h3>Salla & Zid</h3>
+      </div>
+      <p>Full-stack Arabic e-commerce — RTL-ready stores for the Saudi & MENA market with top UX.</p>
+      <div class="skill-bar-wrap"><div class="skill-bar-head"><span class="skill-bar-name">Salla</span><span class="skill-bar-pct">92%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="88"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-head"><span class="skill-bar-name">Zid</span><span class="skill-bar-pct">85%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="85"></div></div></div>
+    </div>
+    <div class="sk-card reveal d3">
+      <div class="sk-head">
+        <div class="sk-icon-wrap i-fe"><img src="../Downloads/portfolio/bootstrap.png" style="width: 50px;border-radius:5px !important;"/></div>
+        <h3>Frontend Dev</h3>
+      </div>
+      <p>Clean, responsive, accessible UIs with modern HTML, CSS, JS — pixel-perfect every time.</p>
+      <div class="skill-bar-wrap"><div class="skill-bar-head"><span class="skill-bar-name">HTML/CSS</span><span class="skill-bar-pct">95%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="95"></div></div></div>
+      <div class="skill-bar-wrap"><div class="skill-bar-head"><span class="skill-bar-name">JavaScript</span><span class="skill-bar-pct">98%</span></div><div class="skill-bar-track"><div class="skill-bar-fill" data-w="80"></div></div></div>
+    </div>
+  </div>
+</section>
+<!-- PROJECTS -->
+<section class="sec alt" id="projects">
+  <div class="s-label reveal">Portfolio</div>
+  <h2 class="s-title reveal">Recent <span>Work</span></h2>
+  <p class="s-sub reveal">107+ real projects delivered across multiple platforms and industries.</p>
+
+  <div class="proj-filters reveal" id="projFilters"></div>
+  <p class="proj-count reveal">Showing <span id="projShowing">0</span> of <span id="projTotal">0</span> projects</p>
+  <div class="proj-grid" id="projGrid"></div>
+  <div class="proj-pagination" id="projPagination"></div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="sec" id="experience">
+  <div class="exp-wrap">
+    <div class="exp-sticky">
+      <div class="s-label reveal">Journey</div>
+      <h2 class="s-title reveal">Work <span>Experience</span></h2>
+      <p class="s-sub reveal">Years of hands-on experience across agencies, startups, and freelance projects.</p>
+    </div>
+    <div class="tl reveal">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-yr">2020 — Present</div>
+        <h3>Senior Wordpress Developer</h3>
+        <div class="tl-co">Work Full time · Egypt & Gulf Region</div>
+        <p>Working with clients across Egypt, Saudi Arabia , Kuwait & UAE. Delivering end-to-end e-commerce solutions on Shopify, Salla, Zid & WordPress. Specializing in conversion-focused builds.</p>
+         <p>Built and maintained 50+ client websites on WordPress. Developed custom WooCommerce solutions. Managed SEO campaigns that improved rankings by 40% on average.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-yr">2018 — 2020</div>
+        <h3>Frontend Developer</h3>
+        <div class="tl-co">Digital Agency</div>
+        <p>I have built and maintained over 20 client websites using HTML, CSS, Sass, JS, JQ, Bootstrap, and other technologies, designing distinctive interfaces and possessing strong knowledge of Laravel and PHP backends.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-yr">2018</div>
+        <h3>Junior Frontend Developer</h3>
+        <div class="tl-co">Tech Startup</div>
+        <p>Built responsive UIs with HTML, CSS and JavaScript. Contributed to landing pages, dashboards, and internal tools used by 10,000+ users daily.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="contact">
+  <div class="s-label reveal">Get In Touch</div>
+  <h2 class="s-title reveal">Let's Work <span>Together</span></h2>
+  <p class="s-sub reveal">Have a project in mind? I'd love to help you build something great.</p>
+  <div class="contact-wrap">
+    <div class="contact-left">
+      <p class="s-sub" style="margin:0 0 2.5rem;">Whether it's a new store, a full website, a platform migration, or anything in between — reach out and let's talk.</p>
+      <div class="c-info-items reveal">
+        <a href="mailto:shaimaa.elwardy@gmail.com" class="c-info">
+          <div class="c-info-icon">✉</div>
+          shaimaa.elwardy@gmail.com
+        </a>
+        <a href="https://wa.link/n4f84t" class="c-info" target="_blank">
+          <div class="c-info-icon">💬</div>
+          WhatsApp
+        </a>
+        <a href="https://www.linkedin.com/in/shaima-elwardy-41054a171/" class="c-info" target="_blank">
+          <div class="c-info-icon">in</div>
+          LinkedIn Profile
+        </a>
+      </div>
+    </div>
+    <div class="reveal d2">
+      <div class="contact-form-wrap">
+        <div class="form-title">Send a Message ✦</div>
+        <div class="f-row" style="margin-bottom:1rem;">
+          <div class="fg"><label>First Name</label><input type="text" placeholder=""></div>
+          <div class="fg"><label>Last Name</label><input type="text" placeholder=""></div>
+        </div>
+        <div class="fg" style="margin-bottom:1rem;"><label>Email</label><input type="email" placeholder="ahmed@example.com"></div>
+        <div class="fg" style="margin-bottom:1rem;"><label>Service Needed</label>
+          <select>
+            <option value="" style="background:#13131e;">Select a service...</option>
+            <option style="background:#13131e;">WordPress Development</option>
+            <option style="background:#13131e;">Shopify Store</option>
+            <option style="background:#13131e;">Salla Store</option>
+            <option style="background:#13131e;">Zid Store</option>
+            <option style="background:#13131e;">Frontend Development</option>
+            <option style="background:#13131e;">Other</option>
+          </select>
+        </div>
+        <div class="fg"><label>Message</label><textarea placeholder="Tell me about your project..."></textarea></div>
+        <button class="submit-btn" onclick="this.textContent='Message Sent! 🚀'; this.style.background='linear-gradient(135deg,#22d3ee,#16a34a)';">
+          Send Message →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Shaimaa<span>.</span>Elwardy</a>
+  <p>© 2026 Shaimaa Elwardy · All rights reserved</p>
+  <a href="#home" class="back-top">↑ Back to top</a>
+</footer>
+
+<script>
+// ── Cursor
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button,.proj-card,.sk-card,.test-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.transform='translate(-50%,-50%) scale(1.6)';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';ring.style.transform='translate(-50%,-50%) scale(1)';});
+});
+
+// ── Nav scroll
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('solid',scrollY>60);});
+
+// ── Typed text
+const phrases=['WordPress Developer','Shopify Expert','Salla Specialist','Zid Developer','Wix Developer','Frontend Developer'];
+let pi=0,ci=0,del=false;
+const el=document.getElementById('typed');
+function type(){
+  const phrase=phrases[pi];
+  if(!del){el.textContent=phrase.slice(0,++ci);if(ci===phrase.length){del=true;setTimeout(type,2000);return;}}
+  else{el.textContent=phrase.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length;}}
+  setTimeout(type,del?60:100);
+}
+type();
+
+// ── Counter animation
+function animCount(el){
+  const target=+el.dataset.count;
+  const dur=2000;const step=dur/target;let cur=0;
+  const t=setInterval(()=>{cur++;el.textContent=cur+(target===100?'%':'+');if(cur>=target)clearInterval(t);},step);
+}
+
+// ── Reveal + skills + counters on scroll
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      // skill bars
+      e.target.querySelectorAll&&e.target.querySelectorAll('.skill-bar-fill').forEach(b=>{
+        setTimeout(()=>{b.style.width=b.dataset.w+'%';},200);
+      });
+      // counters
+      e.target.querySelectorAll&&e.target.querySelectorAll('[data-count]').forEach(animCount);
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Also trigger skill bars when sk-card is revealed
+document.querySelectorAll('.sk-card').forEach(card=>{
+  const cardObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.skill-bar-fill').forEach(b=>{
+          setTimeout(()=>{b.style.width=b.dataset.w+'%';},300);
+        });
+        cardObs.unobserve(e.target);
+      }
+    });
+  },{threshold:.3});
+  cardObs.observe(card);
+});
+
+// Counter in hero
+const heroObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll('[data-count]').forEach(animCount);heroObs.unobserve(e.target);}});
+},{threshold:.5});
+document.querySelector('.hero-stats')&&heroObs.observe(document.querySelector('.hero-stats'));
+
+// ── Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+
+// ══════════════════════════════════════════
+// ── PROJECTS SYSTEM
+// ══════════════════════════════════════════
+const PROJECTS = [
+  {name:"Behbehani Husain",url:"https://behbehanihusain.com",cat:"Business & Services"},
+  {name:"Al Subaiel Law Firm",url:"https://alsubaielawfirm.com",cat:"Legal & Finance"},
+  {name:"H-Z Kuwait",url:"https://www.h-z.com.kw",cat:"Business & Services"},
+  {name:"Jawavog",url:"https://jawavog.com",cat:"E-Commerce"},
+  {name:"Dr Ba7r",url:"https://drba7r.com",cat:"Medical & Clinics"},
+  {name:"Castro Store",url:"https://castromstore.com",cat:"E-Commerce"},
+  {name:"Huda Al Khateeb",url:"https://huda-alkhateeb.net",cat:"Education"},
+  {name:"Dr Mustafa",url:"https://drmustafah.com",cat:"Medical & Clinics"},
+  {name:"Batci KW",url:"https://batcikw.com",cat:"E-Commerce"},
+  {name:"Serene Island Escape",url:"https://sereneislandescape.com",cat:"Business & Services"},
+  {name:"A1 Store KW",url:"https://a1store-kw.com",cat:"E-Commerce"},
+  {name:"Kasab GTC",url:"https://kasabgtc.com",cat:"Business & Services"},
+  {name:"Retro King Q8",url:"https://retrokingq8.com",cat:"E-Commerce"},
+  {name:"We Shopping Express",url:"https://weshoppingexpress.com",cat:"E-Commerce"},
+  {name:"Byf3tmaa",url:"https://byf3tmaa.com",cat:"E-Commerce"},
+  {name:"Easy Way KW",url:"https://easywaykw.com",cat:"Business & Services"},
+  {name:"Ansh Attire",url:"https://anshattire.com",cat:"E-Commerce"},
+  {name:"Al Safain Exchange",url:"https://alsafaintlexchange.com",cat:"Legal & Finance"},
+  {name:"Syal",url:"https://syal.sa",cat:"Business & Services"},
+  {name:"Dew Health Medical",url:"https://dewhealthmedical.com",cat:"Medical & Clinics"},
+  {name:"Lahm Wa Shahm",url:"https://lahmwashahm.com",cat:"Business & Services"},
+  {name:"Al Raayin",url:"https://alraayin.com.sa",cat:"Business & Services"},
+  {name:"Nafis Group",url:"https://www.nafisgroup.net",cat:"Business & Services"},
+  {name:"Carpet Wash KW",url:"https://carpetwashkw.com",cat:"Cleaning Services"},
+  {name:"Tools Cameras",url:"https://www.toolscameras.com",cat:"Business & Services"},
+  {name:"Securities Camera",url:"https://www.securitiescamera.com",cat:"Business & Services"},
+  {name:"Tjhiz",url:"https://tjhiz.com",cat:"Business & Services"},
+  {name:"My Ad",url:"https://myad.com.sa",cat:"Business & Services"},
+  {name:"DAK",url:"https://dak.sa",cat:"Business & Services"},
+  {name:"OB Exchange SA",url:"https://obexchange-sa.com",cat:"Legal & Finance"},
+  {name:"GCS",url:"https://gcs.com.sa",cat:"Business & Services"},
+  {name:"U Renovate Contracting",url:"https://urenovatecontracting.com",cat:"Real Estate & Construction"},
+  {name:"Al Ambaba",url:"https://alambaba.ghinaanalshshama.com",cat:"Business & Services"},
+  {name:"Wasa Solutions",url:"https://wasasolutions.com",cat:"Business & Services"},
+  {name:"Soft Klik",url:"https://soft-klik.com",cat:"Business & Services"},
+  {name:"Lamasat Noor",url:"https://lamasatnoor.com",cat:"Beauty & Wellness"},
+  {name:"Aflaa Al Rayes",url:"https://aflaaalrayes.com",cat:"Business & Services"},
+  {name:"S Doll Group",url:"https://sdollgroup.com",cat:"E-Commerce"},
+  {name:"Raeel Online",url:"https://raeelonline.com",cat:"E-Commerce"},
+  {name:"KW4S",url:"https://kw4s.com",cat:"E-Commerce"},
+  {name:"Kamla Al Hassan",url:"https://kamlaalhassan.com",cat:"Business & Services"},
+  {name:"Al Mansour",url:"https://almansour.kw4s.com",cat:"E-Commerce"},
+  {name:"Wsla SA",url:"https://wsla.sa",cat:"Business & Services"},
+  {name:"Wsla IO",url:"https://wsla.io",cat:"Business & Services"},
+  {name:"Rihana Clinic",url:"https://rihanaclinic.com",cat:"Medical & Clinics"},
+  {name:"Asham Co",url:"https://ashamco.net.sa",cat:"Business & Services"},
+  {name:"Huahui KSA",url:"https://www.huahuiksa.com",cat:"Business & Services"},
+  {name:"MB Agri",url:"https://mbagri.com",cat:"Business & Services"},
+  {name:"Al Basami",url:"https://albasami.com",cat:"Business & Services"},
+  {name:"Gardenia Clinic",url:"https://gardeniaclinic.com",cat:"Medical & Clinics"},
+  {name:"Jolighm",url:"https://jolighm.com",cat:"Business & Services"},
+  {name:"Numolink",url:"https://numolink.com",cat:"Business & Services"},
+  {name:"Al Yem",url:"https://al-yem.com",cat:"Business & Services"},
+  {name:"Stepps MA",url:"https://stepps-ma.com",cat:"Education"},
+  {name:"Mahatat",url:"https://mahatat.sa",cat:"Business & Services"},
+  {name:"Aswwat",url:"https://aswwat.com",cat:"Business & Services"},
+  {name:"Lutfalinsan CS",url:"https://cs.lutfalinsan.org",cat:"Business & Services"},
+  {name:"Lutfalinsan",url:"https://lutfalinsan.org",cat:"Business & Services"},
+  {name:"Diablo Car Rental",url:"https://diablocarrental.com",cat:"Car Rental"},
+  {name:"Maw3id Online",url:"https://maw3idkonline.com",cat:"Business & Services"},
+  {name:"One Car Rent",url:"https://onecarrent.com",cat:"Car Rental"},
+  {name:"Meras Med",url:"https://merasmed.com",cat:"Medical & Clinics"},
+  {name:"Brightness Clinics",url:"https://brightness-clinics.wsla.sa",cat:"Medical & Clinics"},
+  {name:"Dr Malhadad",url:"https://drmalhadad.com",cat:"Medical & Clinics"},
+  {name:"Eman Clinic",url:"https://emanclinic.com",cat:"Medical & Clinics"},
+  {name:"Dentech",url:"https://dentech.com.sa",cat:"Medical & Clinics"},
+  {name:"THS",url:"https://ths.com.sa",cat:"Business & Services"},
+  {name:"Seham Salon",url:"https://seham-salon.com",cat:"Beauty & Wellness"},
+  {name:"Medcure",url:"https://medcure.wsla.sa",cat:"Medical & Clinics"},
+  {name:"Dr Maha",url:"https://dr-maha.wsla.sa",cat:"Medical & Clinics"},
+  {name:"Diva Dental",url:"https://diva.dent.wsla.sa",cat:"Medical & Clinics"},
+  {name:"Avant Clinic",url:"https://avantclinic.sa",cat:"Medical & Clinics"},
+  {name:"Al Qimmah Energy",url:"https://alqimmahenergy.com",cat:"Business & Services"},
+  {name:"Wkadpedia",url:"https://wkadpedia.sa",cat:"Business & Services"},
+  {name:"Cannlily",url:"https://cannlily.com",cat:"E-Commerce"},
+  {name:"Myza",url:"https://myza.company",cat:"Business & Services"},
+  {name:"1TH4 Landscaping",url:"https://1th4landscaping.com",cat:"Real Estate & Construction"},
+  {name:"Al Safuaa",url:"https://al-safuaa.com",cat:"Business & Services"},
+  {name:"Allamsuh SA",url:"https://allamsuh-sa.com",cat:"Business & Services"},
+  {name:"El Momtaz",url:"https://elmomtaz.com",cat:"Business & Services"},
+  {name:"Cvnbnv",url:"https://cvnbnv.com",cat:"Business & Services"},
+  {name:"Wissam El Ebda3",url:"https://wissam-elebda3.com",cat:"Business & Services"},
+  {name:"Al Ehlam",url:"https://alehlam.com",cat:"Business & Services"},
+  {name:"Rukn Al Tfwok",url:"https://ruknaltfwok.com",cat:"Business & Services"},
+  {name:"Al Adaa Al Mithali",url:"https://aladaa-almithali.com",cat:"Business & Services"},
+  {name:"El Faris UAE",url:"https://elfaris-uae.com",cat:"Business & Services"},
+  {name:"Delal Riyadh",url:"https://delalriyadh.com",cat:"Business & Services"},
+  {name:"Jeddah Teachers",url:"https://jeddah-teachers.com",cat:"Education"},
+  {name:"Saudi Teacher",url:"https://saudi-teacher.com",cat:"Education"},
+  {name:"Remas Clean",url:"https://remas-clean.com",cat:"Cleaning Services"},
+  {name:"PVC Al Riyadh",url:"https://pvc-alriyadh.com",cat:"Real Estate & Construction"},
+  {name:"Masarat Net SA",url:"https://masarat.net.sa",cat:"Education"},
+  {name:"Wahata El Marat",url:"https://wahatalemarat.com",cat:"Business & Services"},
+  {name:"Staar Power",url:"https://www.staar-power.com",cat:"Business & Services"},
+  {name:"Egy Star",url:"https://egy-star2.com",cat:"Business & Services"},
+  {name:"We Spray Bugs",url:"https://wespraybugs.com",cat:"Cleaning Services"},
+  {name:"Sakhrr",url:"https://sakhrr.com",cat:"Business & Services"},
+  {name:"Etiha3d",url:"https://etiha3d.com",cat:"Business & Services"},
+  {name:"Nice Car Rental",url:"https://nicecarrentalco.com",cat:"Car Rental"},
+  {name:"Tdoys",url:"https://tdoys.com",cat:"E-Commerce"},
+  {name:"Amer Center",url:"https://amercenter.net",cat:"Business & Services"},
+  {name:"Bayt Al Abnws",url:"https://bayt-alabnws.com",cat:"Business & Services"},
+  {name:"Masarat SA",url:"https://www.masarat.sa",cat:"Education"},
+  {name:"Ana Ninja",url:"https://ananinja.com/sa/ar",cat:"E-Commerce"},
+  {name:"Al Safar Royal",url:"https://alsafaroyal.com",cat:"Business & Services"},
+  {name:"Al Tawajoh Law",url:"https://altawajohlaw.com",cat:"Legal & Finance"},
+  {name:"Rehab KW",url:"https://rehab.kw4s.com",cat:"E-Commerce"},
+];
+
+const PER_PAGE = 12;
+let activeCat = 'All';
+let currentPage = 1;
+
+const catIcons = {
+  'All':'🌐','E-Commerce':'🛍️','Medical & Clinics':'🏥',
+  'Business & Services':'💼','Legal & Finance':'⚖️',
+  'Beauty & Wellness':'💄','Education':'📚',
+  'Real Estate & Construction':'🏗️','Car Rental':'🚗','Cleaning Services':'🧹'
+};
+
+const catColors = {
+  'E-Commerce':'#00e5ff','Medical & Clinics':'#a855f7','Business & Services':'#7070a0',
+  'Legal & Finance':'#f59e0b','Beauty & Wellness':'#ec4899','Education':'#22d3ee',
+  'Real Estate & Construction':'#86efac','Car Rental':'#fb923c','Cleaning Services':'#4ade80'
+};
+
+function getScreenshot(url){
+  const domain = url.replace('https://','').replace('http://','').split('/')[0];
+  return `https://api.screenshotone.com/take?access_key=public&url=${encodeURIComponent(url)}&viewport_width=1280&viewport_height=800&device_scale_factor=1&format=jpg&image_quality=80&block_ads=true&delay=2`;
+}
+
+function buildFilters(){
+  const cats = ['All',...new Set(PROJECTS.map(p=>p.cat))].sort((a,b)=>a==='All'?-1:b==='All'?1:a.localeCompare(b));
+  const wrap = document.getElementById('projFilters');
+  wrap.innerHTML = cats.map(c=>`
+    <button class="pf-btn${c===activeCat?' active':''}" data-cat="${c}">
+      ${catIcons[c]||'📁'} ${c} <span style="opacity:.5;font-size:.65rem;">(${c==='All'?PROJECTS.length:PROJECTS.filter(p=>p.cat===c).length})</span>
+    </button>
+  `).join('');
+  wrap.querySelectorAll('.pf-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      activeCat=btn.dataset.cat;
+      currentPage=1;
+      buildFilters();
+      renderProjects();
+    });
+  });
+}
+
+function renderProjects(){
+  const filtered = activeCat==='All' ? PROJECTS : PROJECTS.filter(p=>p.cat===activeCat);
+  const total = filtered.length;
+  const pages = Math.ceil(total/PER_PAGE);
+  const start = (currentPage-1)*PER_PAGE;
+  const slice = filtered.slice(start, start+PER_PAGE);
+
+  document.getElementById('projTotal').textContent = total;
+  document.getElementById('projShowing').textContent = `${Math.min(start+1,total)}–${Math.min(start+PER_PAGE,total)}`;
+
+  const grid = document.getElementById('projGrid');
+  grid.innerHTML = slice.map((p,i)=>{
+    const letter = p.name.charAt(0).toUpperCase();
+    const color = catColors[p.cat]||'#7070a0';
+    const domain = p.url.replace('https://','').replace('http://','').split('/')[0];
+    const screenshotUrl = `https://image.thum.io/get/width/600/crop/400/noanimate/https://${domain}`;
+    return `
+    <div class="proj-card" style="animation-delay:${i*0.04}s">
+      <div class="proj-thumb">
+        <img src="${screenshotUrl}"
+             alt="${p.name}"
+             loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="proj-thumb-placeholder" data-letter="${letter}" style="display:none;--c:${color}">
+          <span style="font-size:2rem;">${catIcons[p.cat]||'🌐'}</span>
+        </div>
+        <div class="proj-overlay">
+          <a href="${p.url}" target="_blank" rel="noopener" class="proj-link-btn">Visit Site ↗</a>
+          <span class="proj-domain-tag">${domain}</span>
+        </div>
+      </div>
+      <div class="proj-body">
+        <div class="proj-cat" style="color:${color}">${catIcons[p.cat]||''} ${p.cat}</div>
+        <h3><a href="${p.url}" target="_blank" rel="noopener">${p.name}</a></h3>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Pagination
+  const pg = document.getElementById('projPagination');
+  if(pages<=1){pg.innerHTML='';return;}
+  let html = `<button class="pg-btn pg-prev" ${currentPage===1?'disabled':''} onclick="goPage(${currentPage-1})">← Prev</button>`;
+  for(let i=1;i<=pages;i++){
+    if(i===1||i===pages||Math.abs(i-currentPage)<=1){
+      html+=`<button class="pg-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if(Math.abs(i-currentPage)===2){
+      html+=`<span style="color:var(--muted);padding:0 .2rem">…</span>`;
+    }
+  }
+  html+=`<button class="pg-btn pg-next" ${currentPage===pages?'disabled':''} onclick="goPage(${currentPage+1})">Next →</button>`;
+  pg.innerHTML=html;
+}
+
+window.goPage = function(n){
+  currentPage=n;
+  renderProjects();
+  document.getElementById('projects').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+// Init projects
+buildFilters();
+renderProjects();
+</script>
+</body>
+</html>
